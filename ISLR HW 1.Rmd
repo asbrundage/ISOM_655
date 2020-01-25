@@ -1,0 +1,99 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup and Question 8a
+
+```{r}
+library(tidyverse)
+library(MASS)
+library(ISLR)
+library(knitr)
+
+college <- College
+
+```
+
+## Question 8b
+
+```{r}
+Collegefixed <-
+  College %>%
+  rownames_to_column() %>%
+  select(-rowname)
+
+
+```
+
+
+##Question 8ci
+
+```{r}
+summary(Collegefixed)
+
+```
+
+##Question 8cii
+
+```{r}
+collegescatter <-
+  Collegefixed %>%
+  select(1:10) %>%
+  pairs()
+
+```
+
+##Question 8ciii
+
+```{r}
+
+collegebox <-
+  Collegefixed %>%
+  select(Outstate,Private) %>%
+  ggplot(aes( x = Private, y = Outstate)) +
+  geom_boxplot()
+
+collegebox
+
+```
+
+##Question 8civ
+
+```{r}
+
+collegeelite <-
+  Collegefixed %>%
+  mutate(Elite = as.factor(case_when(Top10perc >= 50 ~ "Yes",
+                           Top10perc < 50 ~ "No"))) 
+
+collegeelitebox <-
+  collegeelite %>%
+  ggplot(aes( x = Elite, y = Outstate)) +
+  geom_boxplot()
+
+summary(collegeelite) %>%
+  kable()
+collegeelitebox
+
+```
+
+##Question 8cv
+
+```{r}
+
+collegehist <-
+  collegeelite %>%
+  gather(DataElement,Obs, 2:10) %>%
+  ggplot(aes( x = Obs)) +
+  geom_histogram() +
+  facet_wrap(. ~ DataElement, scales = "free_x")
+
+collegehist
+
+```
+
